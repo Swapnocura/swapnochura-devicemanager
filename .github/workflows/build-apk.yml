@@ -38,22 +38,16 @@ jobs:
           mkdir -p app
           printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
 
-      - name: Check project
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build APK with Gradle
+        run: gradle assembleDebug --stacktrace
+
+      - name: Check APK
         run: |
-          echo "Android SDK: $ANDROID_HOME"
-          echo "Java:"
-          java -version
-          echo "Gradle files:"
-          ls -la
-          test -f gradlew
-          test -f gradle/wrapper/gradle-wrapper.jar
-          echo "Gradle wrapper found."
-
-      - name: Make Gradle executable
-        run: chmod +x gradlew
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+          echo "APK files:"
+          find app/build/outputs/apk -type f -name "*.apk" -print
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
