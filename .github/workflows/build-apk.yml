@@ -20,17 +20,15 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
+      - name: Install Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          accept-android-sdk-licenses: true
 
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses || true
-
-      - name: Install Android SDK packages
+      - name: Install SDK packages
         run: |
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-35"
-          sdkmanager "build-tools;35.0.0"
+          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          yes | sdkmanager --licenses || true
 
       - name: Create google-services.json
         env:
@@ -38,6 +36,14 @@ jobs:
         run: |
           mkdir -p app
           printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
+
+      - name: Check project files
+        run: |
+          echo "Checking Gradle wrapper..."
+          ls -la
+          test -f gradlew
+          test -f gradle/wrapper/gradle-wrapper.jar
+          echo "Gradle wrapper OK"
 
       - name: Make Gradle executable
         run: chmod +x gradlew
