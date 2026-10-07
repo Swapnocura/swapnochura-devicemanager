@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Swapnochura Device Manager</string>
+    <string name="admin_description">স্বপ্নচূড়া ডিভাইস ব্যবস্থাপনা</string>
+    <string name="admin_label">Swapnochura Device Manager</string>
+    <string name="admin_explanation">এই অ্যাপটি অনুমোদিত managed device-এ device policy প্রয়োগ করে।</string>
+</resources>

@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.Swapnochura" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#0A5BC4</item>
+    </style>
+</resources>
