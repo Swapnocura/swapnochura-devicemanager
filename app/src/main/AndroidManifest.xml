@@ -10,6 +10,8 @@
     <application
         android:allowBackup="false"
         android:label="Swapnochura Device Manager"
+        android:icon="@drawable/logo"
+        android:roundIcon="@drawable/logo"
         android:theme="@style/Theme.Swapnochura">
 
         <activity
@@ -40,4 +42,5 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
     </application>
+
 </manifest>
