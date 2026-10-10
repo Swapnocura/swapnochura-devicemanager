@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -33,6 +32,7 @@
                 <action android:name="android.app.action.ADMIN_POLICY_COMPLIANCE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
         </activity>
 
         <receiver
@@ -49,6 +49,7 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
                 <action android:name="android.app.action.DEVICE_ADMIN_DISABLED" />
             </intent-filter>
+
         </receiver>
 
         <service
@@ -57,4 +58,5 @@
             android:foregroundServiceType="dataSync" />
 
     </application>
+
 </manifest>
