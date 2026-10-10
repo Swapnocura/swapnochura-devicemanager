@@ -1,3 +1,4 @@
+
 package com.swapnochura.devicemanager
 
 import android.Manifest
@@ -18,6 +19,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (handleProvisioningIntent(intent)) return
 
         repo = FirebaseRepository(this)
 
@@ -53,7 +56,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        registerFromIntent(intent)
+        setIntent(intent)
+        if (!handleProvisioningIntent(intent)) {
+            registerFromIntent(intent)
+        }
+    }
+
+    private fun handleProvisioningIntent(incoming: Intent?): Boolean {
+        when (incoming?.action) {
+            "android.app.action.GET_PROVISIONING_MODE" -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val result = Intent().putExtra(
+                        DevicePolicyManager.EXTRA_PROVISIONING_MODE,
+                        DevicePolicyManager.PROVISIONING_MODE_FULLY_MANAGED_DEVICE
+                    )
+                    setResult(RESULT_OK, result)
+                } else {
+                    setResult(RESULT_CANCELED)
+                }
+                finish()
+                return true
+            }
+
+            "android.app.action.ADMIN_POLICY_COMPLIANCE" -> {
+                setResult(RESULT_OK)
+                finish()
+                return true
+            }
+        }
+        return false
     }
 
     private fun registerFromIntent(intent: Intent?) {
@@ -73,17 +104,18 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     "Device registration ব্যর্থ: $value"
                 }
+
                 if (success) startDeviceService()
             }
         }
     }
 
     private fun startDeviceService() {
-        val intent = Intent(this, CommandService::class.java)
+        val serviceIntent = Intent(this, CommandService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
+            startForegroundService(serviceIntent)
         } else {
-            startService(intent)
+            startService(serviceIntent)
         }
         status.text = "Command service চালু হয়েছে।"
     }
@@ -102,7 +134,10 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 33 &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 10)
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                10
+            )
         }
     }
 }
